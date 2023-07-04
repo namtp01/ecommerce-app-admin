@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { getBlogs, resetState } from './../features/blogs/blogSlice';
+import { getBlogs, resetState, deleteABlog } from './../features/blogs/blogSlice';
 import { Link } from 'react-router-dom';
 import { BiEdit } from 'react-icons/bi';
 import { AiFillDelete } from 'react-icons/ai';
@@ -53,7 +53,7 @@ const BlogList = () =>
             category: blogState[i].category,
             action: (
                 <>
-                    <Link to={`/admin/blog-list/${blogState[i]._id}`} className='fs-3'>
+                    <Link to={`/admin/blog/${blogState[i]._id}`} className='fs-3'>
                         <BiEdit />
                     </Link>
                     <button className='fs-3 ms-3 text-danger bg-transparent border-0'
@@ -67,7 +67,7 @@ const BlogList = () =>
     };
 
     const deleteBlog = (e) => {
-        dispatch((e));
+        dispatch(deleteABlog(e));
         setOpen(false);
         setTimeout(() => {
             dispatch(getBlogs());

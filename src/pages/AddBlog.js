@@ -9,8 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import { getCategories } from './../features/bcategory/bcategorySlice';
-import { createBlogs } from '../features/blogs/blogSlice';
-import { resetState } from './../features/blogs/blogSlice';
+import { createBlogs, updateABlog } from '../features/blogs/blogSlice';
+import { resetState, getABlog } from './../features/blogs/blogSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 let schema = yup.object().shape({
     title: yup.string().required('Title is required'),
@@ -20,11 +21,26 @@ let schema = yup.object().shape({
 
 const AddBlog = () =>
 {
+
     const dispatch = useDispatch();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const getBlogId = location.pathname.split('/')[3];
+
     const [images, setImages] = useState([]);
 
     useEffect(() =>
     {
+        if (getBlogId !== undefined) {
+            dispatch(getABlog(getBlogId));
+        } else {
+            dispatch(resetState());
+        }
+    }, [getBlogId, dispatch]);
+
+    useEffect(() =>
+    {
+        dispatch(resetState());
         dispatch(getCategories());
     }, [dispatch]);
 
@@ -32,18 +48,21 @@ const AddBlog = () =>
     const imgState = useSelector((state) => state.upload.images);
     const newBlog = useSelector((state) => state.blog);
 
-    const { isSuccess, isError, isLoading, createdProduct } = newBlog;
+    const { isSuccess, isError, isLoading, createdBlog, updatedBlog, blogName, blogCategory, blogDesc, blogImages } = newBlog;
 
     useEffect(() =>
     {
-        if (isSuccess && createdProduct) {
+        if (isSuccess && createdBlog) {
             toast.success("Blog Added Successfully!");
         }
-
+        if (isSuccess && updatedBlog) {
+            toast.success("Blog Updated Successfully!");
+            navigate('/admin/blog-list');
+        }
         if (isError) {
             toast.error("Something Went Wrong!");
         }
-    }, [isSuccess, isError, isLoading, createdProduct]);
+    }, [isSuccess, isError, isLoading, createdBlog]);
 
     const img = [];
     imgState.forEach((i) =>
@@ -55,21 +74,28 @@ const AddBlog = () =>
     });
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: {
-            title: "",
-            description: "",
-            category: "",
-            images: "",
+            title: blogName || "",
+            description: blogDesc || "",
+            category: blogCategory || "",
+            images: blogImages || "",
         },
         validationSchema: schema,
         onSubmit: (values) =>
         {
-            dispatch(createBlogs(values));
-            formik.resetForm();
-            setTimeout(() =>
-            {
+            if (getBlogId !== undefined) {
+                const data = { id: getBlogId, blogData: values }
+                dispatch(updateABlog(data));
                 dispatch(resetState());
-            }, 3000);
+            } else {
+                dispatch(createBlogs(values));
+                formik.resetForm();
+                setTimeout(() =>
+                {
+                    dispatch(resetState());
+                }, 300);
+            }
         }
     });
     useEffect(() =>
@@ -79,7 +105,7 @@ const AddBlog = () =>
 
     return (
         <div>
-            <h3 className="mb-4 title">Add Blog</h3>
+            <h3 className="mb-4 title">{getBlogId !== undefined ? "Edit" : "Add"} Blog</h3>
             <div className="">
                 <form action="" onSubmit={formik.handleSubmit}>
                     <div className='mt-4'>
@@ -138,7 +164,9 @@ const AddBlog = () =>
                             );
                         })}
                     </div>
-                    <button className='btn btn-success border-0 rounded-3 my-5' type='submit'>Add Blog</button>
+                    <button className='btn btn-success border-0 rounded-3 my-5' type='submit'>
+                        {getBlogId !== undefined ? "Edit" : "Add"} Blog
+                    </button>
                 </form>
             </div>
         </div>

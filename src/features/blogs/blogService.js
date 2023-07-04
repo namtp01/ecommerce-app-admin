@@ -13,28 +13,32 @@ const createBlog = async(blog) => {
     return response.data;
 };
 
-const updateCoupon = async(coupon) => {
-    const response = await axios.put(`${base_url}coupon/${coupon.id}`, {
-        name: coupon.couponData.name,
-        expiry: coupon.couponData.expiry,
-        discount: coupon.couponData.discount,
+const updateBlog = async(blog) => {
+    const response = await axios.put(`${base_url}blog/${blog.id}`, {
+        title: blog.blogData.title,
+        category: blog.blogData.category,
+        description: blog.blogData.description,
+        images: blog.blogData.images
     }, config);
     return response.data;
 };
 
-const getCoupon = async(id) => {
-    const response = await axios.get(`${base_url}coupon/${id}`, config);
+const getBlog = async(id) => {
+    const response = await axios.get(`${base_url}blog/${id}`, config);
     return response.data;
 };
 
-const deleteCoupon = async(id) => {
-    const response = await axios.delete(`${base_url}coupon/${id}`, config);
+const deleteBlog = async(id) => {
+    const response = await axios.delete(`${base_url}blog/${id}`, config);
     return response.data;
 };
 
 const blogService = {
     getBlogs,
-    createBlog
+    createBlog,
+    getBlog,
+    deleteBlog,
+    updateBlog
 };
 
 export default blogService;

@@ -63,7 +63,7 @@ const AddBrand = () =>
                 setTimeout(() =>
                 {
                     dispatch(resetState());
-                }, 300);
+                }, 1000);
             }
         }
     });

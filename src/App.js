@@ -22,19 +22,25 @@ import AddBrand from './pages/AddBrand';
 import AddProduct from './pages/AddProduct';
 import CouponList from './pages/CouponList';
 import AddCoupon from './pages/AddCoupon';
+import ViewEnq from './pages/ViewEnq';
+import ViewOrder from './pages/ViewOrder';
+import { PrivateRoutes } from './routing/PrivateRoutes';
+import { OpenRoutes } from './routing/OpenRoutes';
 function App ()
 {
   return (
     <Router>
       <Routes>
-        <Route path='/' element={<Login />} />
+        <Route path='/' element={<OpenRoutes><Login /></OpenRoutes>} />
         <Route path='/reset-password' element={<Resetpassword />} />
         <Route path='/forgot-password' element={<Forgotpassword />} />
-        <Route path='/admin' element={<MainLayout />}>
+        <Route path='/admin' element={<PrivateRoutes><MainLayout /></PrivateRoutes>}>
           <Route index element={<Dashboard />} />
           <Route path="enquiries" element={<Enquiries />} />
+          <Route path="enquiries/:id" element={<ViewEnq />} />
           <Route path="blog-list" element={<BlogList />} />
           <Route path="blog" element={<AddBlog />} />
+          <Route path="blog/:id" element={<AddBlog />} />
           <Route path="coupon-list" element={<CouponList />} />
           <Route path="coupon" element={<AddCoupon />} />
           <Route path="coupon/:id" element={<AddCoupon />} />
@@ -42,6 +48,7 @@ function App ()
           <Route path="blog-category" element={<AddBlogCat />} />
           <Route path="blog-category/:id" element={<AddBlogCat />} />
           <Route path="orders" element={<Orders />} />
+          <Route path="order/:id" element={<ViewOrder />} />
           <Route path="customers" element={<Customers />} />
           <Route path="list-color" element={<ColorList />} />
           <Route path="color" element={<AddColor />} />

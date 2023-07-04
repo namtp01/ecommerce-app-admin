@@ -5,7 +5,7 @@ import
 } from '@ant-design/icons';
 import { Outlet } from 'react-router-dom';
 import { IoIosNotifications } from 'react-icons/io';
-import { AiOutlineDashboard, AiOutlineShoppingCart, AiOutlineUser, AiOutlineBgColors } from 'react-icons/ai';
+import { AiOutlineDashboard, AiOutlineShoppingCart, AiOutlineUser, AiOutlineBgColors, AiOutlineLogout } from 'react-icons/ai';
 import { RiCouponLine } from "react-icons/ri";
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -26,6 +26,13 @@ const MainLayout = () =>
         token: { colorBgContainer },
     } = theme.useToken();
     const navigate = useNavigate();
+
+    // const handleLogout = () => {
+    //     localStorage.clear();
+    //     window.location.reload();
+    //     navigate('/');
+    // };
+
     return (
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -42,6 +49,8 @@ const MainLayout = () =>
                     onClick={({ key }) =>
                     {
                         if (key === 'signout') {
+                            localStorage.clear();
+                            window.location.reload();
                         } else {
                             navigate(key);
                         }
@@ -158,6 +167,11 @@ const MainLayout = () =>
                             icon: <FaClipboardList className='fs-4' />,
                             label: 'Enquiries',
                         },
+                        {
+                            key: 'signout',
+                            icon: <AiOutlineLogout className='fs-4' />,
+                            label: 'Signout',
+                        },
                     ]}
                 />
             </Sider>
@@ -201,9 +215,12 @@ const MainLayout = () =>
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link className='dropdown-item py-1 mb-1' style={{ height: "auto", lineHeight: "20px" }} to='/'>
+                                    {/* <button onClick={handleLogout} className='dropdown-item py-1 mb-1' style={{ height: "auto", lineHeight: "20px" }} type='button'>
                                         Signout
-                                    </Link>
+                                    </button> */}
+                                    {/* <Link className='dropdown-item py-1 mb-1' style={{ height: "auto", lineHeight: "20px" }} to='/'>
+                                        Signout
+                                    </Link> */}
                                 </li>
                             </div>
                         </div>
